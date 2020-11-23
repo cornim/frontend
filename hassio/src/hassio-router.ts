@@ -4,6 +4,7 @@ import {
   internalProperty,
   PropertyValues,
 } from "lit-element";
+import { fireEvent } from "../../src/common/dom/fire_event";
 import {
   fetchHassioHassOsInfo,
   fetchHassioHostInfo,
@@ -19,6 +20,7 @@ import {
   HassioPanelInfo,
   HassioSupervisorInfo,
 } from "../../src/data/hassio/supervisor";
+import { Supervisor } from "../../src/data/supervisor/supervisor";
 import {
   HassRouterPage,
   RouterOptions,
@@ -31,6 +33,8 @@ import "./hassio-panel";
 @customElement("hassio-router")
 class HassioRouter extends HassRouterPage {
   @property({ attribute: false }) public hass!: HomeAssistant;
+
+  @property({ attribute: false }) public supervisor!: Supervisor;
 
   @property() public panel!: HassioPanelInfo;
 
@@ -80,6 +84,7 @@ class HassioRouter extends HassRouterPage {
     const route = el.nodeName === "HASSIO-PANEL" ? this.route : this.routeTail;
 
     el.hass = this.hass;
+    el.supervisor = this.supervisor;
     el.narrow = this.narrow;
     el.supervisorInfo = this._supervisorInfo;
     el.hassioInfo = this._hassioInfo;
@@ -109,6 +114,12 @@ class HassioRouter extends HassRouterPage {
     this._hassioInfo = hassioInfo;
     this._hostInfo = hostInfo;
     this._hassInfo = hassInfo;
+    fireEvent(this, "supervisor-update", {
+      host: hostInfo,
+      supervisor: supervisorInfo,
+      info: hassioInfo,
+      core: hassioInfo,
+    });
 
     if (this._hostInfo.features && this._hostInfo.features.includes("hassos")) {
       this._hassOsInfo = await fetchHassioHassOsInfo(this.hass);

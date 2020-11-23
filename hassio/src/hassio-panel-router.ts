@@ -5,6 +5,7 @@ import {
   HassioSupervisorInfo,
   HassioInfo,
 } from "../../src/data/hassio/supervisor";
+import { Supervisor } from "../../src/data/supervisor/supervisor";
 import {
   HassRouterPage,
   RouterOptions,
@@ -20,6 +21,8 @@ import "./system/hassio-system";
 @customElement("hassio-panel-router")
 class HassioPanelRouter extends HassRouterPage {
   @property({ attribute: false }) public hass!: HomeAssistant;
+
+  @property({ attribute: false }) public supervisor!: Supervisor;
 
   @property({ attribute: false }) public route!: Route;
 
@@ -54,6 +57,7 @@ class HassioPanelRouter extends HassRouterPage {
 
   protected updatePageEl(el) {
     el.hass = this.hass;
+    el.supervisor = this.supervisor;
     el.route = this.route;
     el.narrow = this.narrow;
     el.supervisorInfo = this.supervisorInfo;

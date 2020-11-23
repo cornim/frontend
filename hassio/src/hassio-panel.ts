@@ -13,12 +13,15 @@ import {
   HassioSupervisorInfo,
   HassioInfo,
 } from "../../src/data/hassio/supervisor";
+import { Supervisor } from "../../src/data/supervisor/supervisor";
 import { HomeAssistant, Route } from "../../src/types";
 import "./hassio-panel-router";
 
 @customElement("hassio-panel")
 class HassioPanel extends LitElement {
   @property({ attribute: false }) public hass!: HomeAssistant;
+
+  @property({ attribute: false }) public supervisor!: Supervisor;
 
   @property({ type: Boolean }) public narrow!: boolean;
 
@@ -42,6 +45,7 @@ class HassioPanel extends LitElement {
       <hassio-panel-router
         .route=${this.route}
         .hass=${this.hass}
+        .supervisor=${this.supervisor}
         .narrow=${this.narrow}
         .supervisorInfo=${this.supervisorInfo}
         .hassioInfo=${this.hassioInfo}
