@@ -248,8 +248,7 @@ class HassioSupervisorInfo extends LitElement {
         channel: this.supervisorInfo.channel === "stable" ? "beta" : "stable",
       };
       await setSupervisorOption(this.hass, data);
-      await reloadSupervisor(this.hass);
-      fireEvent(this, "hass-api-called", { success: true, response: null });
+      await this._reloadSupervisor();
     } catch (err) {
       showAlertDialog(this, {
         title: "Failed to set supervisor option",
@@ -265,8 +264,7 @@ class HassioSupervisorInfo extends LitElement {
     button.progress = true;
 
     try {
-      await reloadSupervisor(this.hass);
-      this.supervisorInfo = await fetchHassioSupervisorInfo(this.hass);
+      await this._reloadSupervisor();
     } catch (err) {
       showAlertDialog(this, {
         title: "Failed to reload the supervisor",
@@ -275,6 +273,12 @@ class HassioSupervisorInfo extends LitElement {
     } finally {
       button.progress = false;
     }
+  }
+
+  private async _reloadSupervisor(): Promise<void> {
+    await reloadSupervisor(this.hass);
+    const supervisor = await fetchHassioSupervisorInfo(this.hass);
+    fireEvent(this, "supervisor-update", { supervisor });
   }
 
   private async _supervisorRestart(ev: CustomEvent): Promise<void> {

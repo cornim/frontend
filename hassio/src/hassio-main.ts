@@ -70,6 +70,9 @@ export class HassioMain extends SupervisorBaseElement {
   }
 
   protected render() {
+    if (!this.supervisor || !this.hass) {
+      return html``;
+    }
     return html`
       <hassio-router
         .hass=${this.hass}

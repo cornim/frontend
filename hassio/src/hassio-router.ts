@@ -1,25 +1,5 @@
-import {
-  customElement,
-  property,
-  internalProperty,
-  PropertyValues,
-} from "lit-element";
-import { fireEvent } from "../../src/common/dom/fire_event";
-import {
-  fetchHassioHassOsInfo,
-  fetchHassioHostInfo,
-  HassioHassOSInfo,
-  HassioHostInfo,
-} from "../../src/data/hassio/host";
-import {
-  fetchHassioHomeAssistantInfo,
-  fetchHassioSupervisorInfo,
-  fetchHassioInfo,
-  HassioHomeAssistantInfo,
-  HassioInfo,
-  HassioPanelInfo,
-  HassioSupervisorInfo,
-} from "../../src/data/hassio/supervisor";
+import { customElement, property, PropertyValues } from "lit-element";
+import { HassioPanelInfo } from "../../src/data/hassio/supervisor";
 import { Supervisor } from "../../src/data/supervisor/supervisor";
 import {
   HassRouterPage,
@@ -36,9 +16,9 @@ class HassioRouter extends HassRouterPage {
 
   @property({ attribute: false }) public supervisor!: Supervisor;
 
-  @property() public panel!: HassioPanelInfo;
+  @property({ attribute: false }) public panel!: HassioPanelInfo;
 
-  @property() public narrow!: boolean;
+  @property({ type: Boolean }) public narrow!: boolean;
 
   protected routerOptions: RouterOptions = {
     // Hass.io has a page with tabs, so we route all non-matching routes to it.
@@ -64,16 +44,6 @@ class HassioRouter extends HassRouterPage {
     },
   };
 
-  @internalProperty() private _supervisorInfo?: HassioSupervisorInfo;
-
-  @internalProperty() private _hostInfo?: HassioHostInfo;
-
-  @internalProperty() private _hassioInfo?: HassioInfo;
-
-  @internalProperty() private _hassOsInfo?: HassioHassOSInfo;
-
-  @internalProperty() private _hassInfo?: HassioHomeAssistantInfo;
-
   protected firstUpdated(changedProps: PropertyValues) {
     super.firstUpdated(changedProps);
     this.addEventListener("hass-api-called", (ev) => this._apiCalled(ev));
@@ -86,11 +56,11 @@ class HassioRouter extends HassRouterPage {
     el.hass = this.hass;
     el.supervisor = this.supervisor;
     el.narrow = this.narrow;
-    el.supervisorInfo = this._supervisorInfo;
-    el.hassioInfo = this._hassioInfo;
-    el.hostInfo = this._hostInfo;
-    el.hassInfo = this._hassInfo;
-    el.hassOsInfo = this._hassOsInfo;
+    el.supervisorInfo = this.supervisor.supervisor;
+    el.hassioInfo = this.supervisor.info;
+    el.hostInfo = this.supervisor.host;
+    el.hassInfo = this.supervisor.core;
+    el.hassOsInfo = this.supervisor.os;
     el.route = route;
 
     if (el.localName === "hassio-ingress-view") {
@@ -101,28 +71,6 @@ class HassioRouter extends HassRouterPage {
   private async _fetchData() {
     if (this.panel.config && this.panel.config.ingress) {
       this._redirectIngress(this.panel.config.ingress);
-      return;
-    }
-
-    const [supervisorInfo, hostInfo, hassInfo, hassioInfo] = await Promise.all([
-      fetchHassioSupervisorInfo(this.hass),
-      fetchHassioHostInfo(this.hass),
-      fetchHassioHomeAssistantInfo(this.hass),
-      fetchHassioInfo(this.hass),
-    ]);
-    this._supervisorInfo = supervisorInfo;
-    this._hassioInfo = hassioInfo;
-    this._hostInfo = hostInfo;
-    this._hassInfo = hassInfo;
-    fireEvent(this, "supervisor-update", {
-      host: hostInfo,
-      supervisor: supervisorInfo,
-      info: hassioInfo,
-      core: hassioInfo,
-    });
-
-    if (this._hostInfo.features && this._hostInfo.features.includes("hassos")) {
-      this._hassOsInfo = await fetchHassioHassOsInfo(this.hass);
     }
   }
 

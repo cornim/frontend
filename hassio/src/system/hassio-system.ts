@@ -15,6 +15,7 @@ import {
   HassioInfo,
   HassioSupervisorInfo,
 } from "../../../src/data/hassio/supervisor";
+import { Supervisor } from "../../../src/data/supervisor/supervisor";
 import "../../../src/layouts/hass-tabs-subpage";
 import { haStyle } from "../../../src/resources/styles";
 import { HomeAssistant, Route } from "../../../src/types";
@@ -28,6 +29,8 @@ import "./hassio-system-metrics";
 @customElement("hassio-system")
 class HassioSystem extends LitElement {
   @property({ attribute: false }) public hass!: HomeAssistant;
+
+  @property({ attribute: false }) public supervisor!: Supervisor;
 
   @property({ type: Boolean }) public narrow!: boolean;
 
@@ -61,6 +64,7 @@ class HassioSystem extends LitElement {
             ></hassio-supervisor-info>
             <hassio-host-info
               .hass=${this.hass}
+              .supervisor=${this.supervisor}
               .hassioInfo=${this.hassioInfo}
               .hostInfo=${this.hostInfo}
               .hassOsInfo=${this.hassOsInfo}

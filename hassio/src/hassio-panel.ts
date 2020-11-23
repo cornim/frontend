@@ -38,9 +38,6 @@ class HassioPanel extends LitElement {
   @property({ attribute: false }) public hassOsInfo!: HassioHassOSInfo;
 
   protected render(): TemplateResult {
-    if (!this.supervisorInfo) {
-      return html``;
-    }
     return html`
       <hassio-panel-router
         .route=${this.route}
