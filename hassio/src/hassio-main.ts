@@ -12,11 +12,11 @@ import { SupervisorBaseElement } from "./supervisor-base-element";
 export class HassioMain extends SupervisorBaseElement {
   @property({ attribute: false }) public hass!: HomeAssistant;
 
-  @property() public panel!: HassioPanelInfo;
+  @property({ attribute: false }) public panel!: HassioPanelInfo;
 
-  @property() public narrow!: boolean;
+  @property({ type: Boolean }) public narrow!: boolean;
 
-  @property() public route?: Route;
+  @property({ attribute: false }) public route?: Route;
 
   protected firstUpdated(changedProps: PropertyValues) {
     super.firstUpdated(changedProps);

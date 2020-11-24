@@ -84,9 +84,6 @@ class HassioSupervisorInfo extends LitElement {
   @property({ attribute: false }) public supervisor!: Supervisor;
 
   protected render(): TemplateResult | void {
-    if (!this.hass || !this.supervisor) {
-      return html``;
-    }
     return html`
       <ha-card header="Supervisor">
         <div class="card-content">

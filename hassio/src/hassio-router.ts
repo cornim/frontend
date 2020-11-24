@@ -56,11 +56,6 @@ class HassioRouter extends HassRouterPage {
     el.hass = this.hass;
     el.supervisor = this.supervisor;
     el.narrow = this.narrow;
-    el.supervisorInfo = this.supervisor.supervisor;
-    el.hassioInfo = this.supervisor.info;
-    el.hostInfo = this.supervisor.host;
-    el.hassInfo = this.supervisor.core;
-    el.hassOsInfo = this.supervisor.os;
     el.route = route;
 
     if (el.localName === "hassio-ingress-view") {

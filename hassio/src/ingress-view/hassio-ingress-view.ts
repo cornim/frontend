@@ -29,9 +29,9 @@ import { fireEvent } from "../../../src/common/dom/fire_event";
 class HassioIngressView extends LitElement {
   @property({ attribute: false }) public hass!: HomeAssistant;
 
-  @property() public route!: Route;
+  @property({ attribute: false }) public route!: Route;
 
-  @property() public ingressPanel = false;
+  @property({ type: Boolean }) public ingressPanel = false;
 
   @internalProperty() private _addon?: HassioAddonDetails;
 
