@@ -43,7 +43,7 @@ class HassioDashboard extends LitElement {
           ></hassio-update>
           <hassio-addons
             .hass=${this.hass}
-            .addons=${this.supervisor.supervisor.addons}
+            .supervisor=${this.supervisor}
           ></hassio-addons>
         </div>
       </hass-tabs-subpage>

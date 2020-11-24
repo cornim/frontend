@@ -39,8 +39,8 @@ export class HassioUpdate extends LitElement {
   @property({ attribute: false }) public supervisor!: Supervisor;
 
   private _pendingUpdates = memoizeOne((supervisor: Supervisor): number => {
-    return [supervisor.core, supervisor.supervisor, supervisor.os].filter(
-      (value) => !!value && value?.update_available
+    return Object.keys(supervisor).filter(
+      (value) => supervisor[value].update_available
     ).length;
   });
 
