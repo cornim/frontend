@@ -16,7 +16,7 @@ import { haStyle } from "../../resources/styles";
 import { HomeAssistant } from "../../types";
 import type { DateRangePickerRanges } from "../../components/ha-date-range-picker";
 import "../../components/ha-date-range-picker";
-import "../../components/entity/ha-entity-picker";
+import "../../components/entity/ha-multi-entity-picker";
 import { fetchDate, computeHistory } from "../../data/history";
 import "../../components/ha-circular-progress";
 
@@ -29,7 +29,7 @@ class HaPanelHistory extends LitElement {
 
   @property() _endDate: Date;
 
-  @property() _entityId = "";
+  @property() _entityIds = "";
 
   @property() _isLoading = false;
 
@@ -79,32 +79,34 @@ class HaPanelHistory extends LitElement {
               @change=${this._dateRangeChanged}
             ></ha-date-range-picker>
 
-            <ha-entity-picker
+            <ha-multi-entity-picker
               .hass=${this.hass}
-              .value=${this._entityId}
+              .value=${this._entityIds}
               .label=${this.hass.localize(
                 "ui.components.entity.entity-picker.entity"
               )}
               .disabled=${this._isLoading}
-              @change=${this._entityPicked}
+              @change=${this._entitiesPicked}
             ></ha-entity-picker>
           </div>
-          ${this._isLoading
-            ? html`<div class="progress-wrapper">
-                <ha-circular-progress
-                  active
-                  alt=${this.hass.localize("ui.common.loading")}
-                ></ha-circular-progress>
-              </div>`
-            : html`
-                <state-history-charts
-                  .hass=${this.hass}
-                  .historyData=${this._stateHistory}
-                  .endTime=${this._endDate}
-                  no-single
-                >
-                </state-history-charts>
-              `}
+          ${
+            this._isLoading
+              ? html`<div class="progress-wrapper">
+                  <ha-circular-progress
+                    active
+                    alt=${this.hass.localize("ui.common.loading")}
+                  ></ha-circular-progress>
+                </div>`
+              : html`
+                  <state-history-charts
+                    .hass=${this.hass}
+                    .historyData=${this._stateHistory}
+                    .endTime=${this._endDate}
+                    no-single
+                  >
+                  </state-history-charts>
+                `
+          }
         </div>
       </ha-app-layout>
     `;
@@ -182,7 +184,7 @@ class HaPanelHistory extends LitElement {
       this.hass,
       this._startDate,
       this._endDate,
-      this._entityId
+      this._entityIds
     );
     this._stateHistory = computeHistory(
       this.hass,
@@ -203,8 +205,8 @@ class HaPanelHistory extends LitElement {
     this._endDate = endDate;
   }
 
-  private _entityPicked(ev) {
-    this._entityId = ev.target.value;
+  private _entitiesPicked(ev) {
+    this._entityIds = ev.target.value;
   }
 
   static get styles() {
